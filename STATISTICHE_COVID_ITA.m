@@ -7,7 +7,16 @@ else
     !git pull git://github.com/pcm-dpc/COVID-19.git
     cd(oldFolder);
 end
-csvfiles = dir('COVID-19\dati-regioni\*.csv');
+if ismac
+    % Code to run on Mac platform
+elseif isunix
+    % Code to run on Linux platform
+elseif ispc
+    csvfiles = dir('COVID-19\dati-regioni\*.csv');
+else
+    csvfiles = dir('COVID-19\dati-regioni\*.csv');
+end
+% csvfiles = dir('COVID-19\dati-regioni\*.csv');
 addpath(genpath(newFolder))
 csvfiles(end)=[];
 csvfiles(end)=[];
@@ -31,6 +40,7 @@ assex=zeros(1,length(csvfiles));
 guariti_su_morti_per_giorno=zeros(1,length(csvfiles));
 guariti_su_morti=zeros(1,length(csvfiles));
 nomi=zeros(1,length(csvfiles));
+% test=zeros(1,length(csvfiles));
 
 
 for file = csvfiles'
@@ -61,6 +71,7 @@ for l = 1:length(nuovi_casi())
         tamponi_per_giorno(l)=tamponi(l);
         diff_infetti(l)=nuovi_casi(l);
         terapia_intensiva_giornaliera(l)=terapia_intensiva(l);
+%         test(l)=100;
     else
         nuovi_casi(l)=tot_casi(l)-tot_casi(l-1);
         terapia_intensiva_giornaliera(l)=terapia_intensiva(l)-terapia_intensiva(l-1);
@@ -68,6 +79,7 @@ for l = 1:length(nuovi_casi())
         nuovi_morti(l)=morti(l)-morti(l-1);
         tamponi_per_giorno(l)=tamponi(l)-tamponi(l-1);
         diff_infetti(l)=nuovi_casi(l)-nuovi_casi(l-1);
+%         test(l)=((diff_infetti(l))/nuovi_casi(l-1))*100;
     end
     guariti_su_morti_per_giorno(l)=nuovi_guariti(l)/nuovi_morti(l);
 end
@@ -276,4 +288,5 @@ ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
 legend('Dati complessivi terapia intensiva')
 
-
+% figure('Name','Test')
+% plot(assex,test), grid on
