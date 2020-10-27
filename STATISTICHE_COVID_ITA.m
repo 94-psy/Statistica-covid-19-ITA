@@ -1,21 +1,28 @@
 clear all; close all; clc
-newFolder='COVID-19';
-if ~exist('COVID-19', 'dir')
+if ismac
+    currentFolder = pwd;
+    newFolder='COVID-19';
+    csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
+elseif isunix
+    currentFolder = pwd;
+    newFolder='COVID-19';
+    csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
+elseif ispc
+    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
+    newFolder='COVID-19';
+else
+    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
+    newFolder='COVID-19';
+end
+
+if ~exist(newFolder, 'dir')
     !git clone git://github.com/pcm-dpc/COVID-19.git
 else
     oldFolder = cd(newFolder);
     !git pull git://github.com/pcm-dpc/COVID-19.git
     cd(oldFolder);
 end
-if ismac
-    % Code to run on Mac platform
-elseif isunix
-    % Code to run on Linux platform
-elseif ispc
-    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
-else
-    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
-end
+
 % csvfiles = dir('COVID-19\dati-regioni\*.csv');
 addpath(genpath(newFolder))
 csvfilesreg(end)=[];
