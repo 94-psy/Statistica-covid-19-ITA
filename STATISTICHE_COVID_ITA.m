@@ -173,7 +173,7 @@ for ll = 1:length(Wnuovi_casi())
         Wdiff_infetti(ll)=Wnuovi_casi(ll)-Wnuovi_casi(ll-1);
     end
     Wguariti_su_morti_per_giorno(ll)=Wnuovi_guariti(ll)/Wnuovi_deceduti(ll);
-    Wrapporto_infetti_su_tamponi(ll)=Wnuovi_casi(ll)/Wtamponi_per_settimana(ll);
+    Wrapporto_infetti_su_tamponi(ll)=(Wnuovi_casi(ll)*100)/Wtamponi_per_settimana(ll);
 end
 
 %%plotting%%
@@ -225,22 +225,22 @@ legend('Dati complessivi terapia intensiva','Dati giornalieri terapia intensiva'
 
 
 figure('Name','Tamponi')
-subplot(2,2,1)
+subplot(3,1,1)
 plot(assex,tamponi,'r-+'), grid on
 ylabel('Numero tamponi')
 xlabel('Giorni da inizio [au]')
 legend('Numero tamponi effettuati')
-subplot(2,2,2)
+subplot(3,1,2)
 plot(assex,tamponi_per_giorno,'r-+'), grid on
 ylabel('Numero tamponi')
 xlabel('Giorni da inizio [au]')
 legend('Numero tamponi per giorno')
-subplot(2,2,3)
+subplot(3,1,3)
 plot(assex,rapporto_infetti_su_tamponi,'r-+'), grid on
 ylabel('Valori in %')
 xlabel('Giorni da inizio [au]')
 legend('Rapporto tamponi/infetti per giorno')
-subplot(2,2,4)
+% subplot(2,2,4)
 
 
 %%WEEK PLOTTING
@@ -292,22 +292,22 @@ legend('Dati complessivi terapia intensiva')
 
 
 figure('Name','Tamponi')
-subplot(2,2,1)
+subplot(3,1,1)
 plot(Wassex,Wtamponi,'r-+'), grid on
 ylabel('Tamponi effettuati')
 xlabel('N° settimane passate [au]')
 legend('Numero tamponi effettuati')
-subplot(2,2,2)
+subplot(3,1,2)
 plot(Wassex,Wtamponi_per_settimana,'r-+'), grid on
 ylabel('Tamponi effettuati')
 xlabel('N° settimane passate [au]')
 legend('Numero tamponi effettuati nella settimana')
-subplot(2,2,3)
+subplot(3,1,3)
 plot(Wassex,Wrapporto_infetti_su_tamponi,'r-+'), grid on
 ylabel('Valori in %')
 xlabel('N° settimane passate [au]')
 legend('Rapporto tamponi/infetti per settimana')
-subplot(2,2,4)
+% subplot(2,2,4)
 
 
 % figure('Name','Test')
