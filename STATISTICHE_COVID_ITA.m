@@ -125,8 +125,9 @@ for jj=1:settimane_totali
     
     for kk=last_index:ending_index
         Wnuovi_attuali(jj)=Wnuovi_attuali(jj)+nuovi_attuali_positivi(kk);
+        Wterapia_intensiva(jj)=Wterapia_intensiva(jj)+terapia_intensiva_giornaliera(kk);
     end
-    Wterapia_intensiva(jj)=terapia_intensiva(kk);
+%     Wterapia_intensiva(jj)=terapia_intensiva(kk);
     Wdeceduti(jj)=deceduti(kk);
     Wtamponi(jj)=tamponi(kk);
     Wguariti(jj)=guariti(kk);
@@ -284,10 +285,10 @@ ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
 legend('Ricoverati sintomatici','Isolamento domiciliare','Totale ospedalizzati')
 subplot(2,2,4)
-plot(Wassex,Wterapia_intensiva,'r-+'), grid on
+plot(Wassex,Wterapia_intensiva,'b-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
-legend('Dati complessivi terapia intensiva')
+legend('Variazione settimanale terapia intensiva')
 
 
 
