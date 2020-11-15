@@ -212,7 +212,7 @@ subplot(2,2,2)
 plot(assex,nuovi_guariti,'r-+',assex,nuovi_deceduti,'b-+'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
-legend('Nuovi guariti','Nuovi morti')
+legend('Nuovi guariti','Nuovi Deceduti')
 subplot(2,2,3)
 plot(assex,ricoverati_sintomatici,'r-+',assex,isolamento_domiciliare,'g-+',assex,totale_ospedalizzati,'k-+'), grid on
 ylabel('Numero casi')
@@ -278,7 +278,7 @@ subplot(2,2,2)
 plot(Wassex,Wnuovi_guariti,'r-+',Wassex,Wnuovi_deceduti,'b-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
-legend('Nuovi guariti','Nuovi morti')
+legend('Nuovi guariti','Nuovi Deceduti')
 subplot(2,2,3)
 plot(Wassex,Wcasi_sintomatici,'r-+',Wassex,Wisolamento_domiciliare,'g-+',Wassex,Wtotale_ospedalizzati,'k-+'), grid on
 ylabel('Numero casi per settimana')
