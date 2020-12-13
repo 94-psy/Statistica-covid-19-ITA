@@ -22,6 +22,21 @@ else
     !git pull git://github.com/pcm-dpc/COVID-19.git
     cd(oldFolder);
 end
+if ismac
+    currentFolder = pwd;
+    newFolder='COVID-19';
+    csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
+elseif isunix
+    currentFolder = pwd;
+    newFolder='COVID-19';
+    csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
+elseif ispc
+    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
+    newFolder='COVID-19';
+else
+    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
+    newFolder='COVID-19';
+end
 
 % csvfiles = dir('COVID-19\dati-regioni\*.csv');
 addpath(genpath(newFolder))
@@ -54,7 +69,7 @@ for file = csvfilesreg'
     k=k+1;
     [data]=readmatrix(csvfilesreg(k).name,'Delimiter',',');
     nomi(k)=str2double(csvfilesreg(k).name(end-11:end-4));
-    for i=1:length(data) %data(1,3)= prima riga terza colonna. 7 ricoverati con sintomi, 8 terapia intensiva, 9 totale ospedalizzati, 10 isolamento domiciliare, 18 TOTALE CASI, 15 deceduti,14 guariti, 12 nuovi attualmente positivi, 11 totale attualmente positivi, 19 numero tamponi fatti
+    for i=1:length(data(:,1)) %data(1,3)= prima riga terza colonna. 7 ricoverati con sintomi, 8 terapia intensiva, 9 totale ospedalizzati, 10 isolamento domiciliare, 18 TOTALE CASI, 15 deceduti,14 guariti, 12(13?) nuovi attualmente positivi, 11 totale attualmente positivi, 19 numero tamponi fatti
         deceduti(k)=deceduti(k)+data(i,15);
         terapia_intensiva(k)=terapia_intensiva(k)+data(i,8);
         guariti(k)=guariti(k)+data(i,14);
