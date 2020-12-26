@@ -1,20 +1,6 @@
 clear all; close all; clc
-if ismac
-    currentFolder = pwd;
-    newFolder='COVID-19';
-    csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
-elseif isunix
-    currentFolder = pwd;
-    newFolder='COVID-19';
-    csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
-elseif ispc
-    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
-    newFolder='COVID-19';
-else
-    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
-    newFolder='COVID-19';
-end
-
+currentFolder = pwd;
+newFolder='COVID-19';
 if ~exist(newFolder, 'dir')
     !git clone git://github.com/pcm-dpc/COVID-19.git
 else
@@ -23,11 +9,11 @@ else
     cd(oldFolder);
 end
 if ismac
-    currentFolder = pwd;
+    %     currentFolder = pwd;
     newFolder='COVID-19';
     csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
 elseif isunix
-    currentFolder = pwd;
+    %     currentFolder = pwd;
     newFolder='COVID-19';
     csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
 elseif ispc
@@ -142,7 +128,7 @@ for jj=1:settimane_totali
         Wnuovi_attuali(jj)=Wnuovi_attuali(jj)+nuovi_attuali_positivi(kk);
         Wterapia_intensiva(jj)=Wterapia_intensiva(jj)+terapia_intensiva_giornaliera(kk);
     end
-%     Wterapia_intensiva(jj)=terapia_intensiva(kk);
+    %     Wterapia_intensiva(jj)=terapia_intensiva(kk);
     Wdeceduti(jj)=deceduti(kk);
     Wtamponi(jj)=tamponi(kk);
     Wguariti(jj)=guariti(kk);
@@ -255,7 +241,7 @@ subplot(3,1,3)
 plot(assex,rapporto_infetti_su_tamponi,'r-+'), grid on
 ylabel('Valori in %')
 xlabel('Giorni da inizio [au]')
-legend('Rapporto tamponi/infetti per giorno')
+legend('Rapporto infetti per giorno/tamponi')
 % subplot(2,2,4)
 
 
@@ -322,7 +308,7 @@ subplot(3,1,3)
 plot(Wassex,Wrapporto_infetti_su_tamponi,'r-+'), grid on
 ylabel('Valori in %')
 xlabel('N° settimane passate [au]')
-legend('Rapporto tamponi/infetti per settimana')
+legend('Rapporto infetti per settimana/tamponi')
 % subplot(2,2,4)
 
 
