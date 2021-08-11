@@ -1,4 +1,6 @@
 clear all; close all; clc
+
+%% DATA
 currentFolder = pwd;
 newFolder='COVID-19';
 if ~exist(newFolder, 'dir')
@@ -12,20 +14,22 @@ if ismac
     %     currentFolder = pwd;
     newFolder='COVID-19';
     csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
+    csvfilesprov = dir('COVID-19/dati-province/*.csv');
 elseif isunix
     %     currentFolder = pwd;
     newFolder='COVID-19';
     csvfilesreg = dir('COVID-19/dati-regioni/*.csv');
-elseif ispc
-    csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
-    newFolder='COVID-19';
+    csvfilesprov = dir('COVID-19/dati-province/*.csv');
 else
     csvfilesreg = dir('COVID-19\dati-regioni\*.csv');
+    csvfilesprov = dir('COVID-19\dati-province\*.csv');
     newFolder='COVID-19';
 end
 
 % csvfiles = dir('COVID-19\dati-regioni\*.csv');
 addpath(genpath(newFolder))
+
+%% elaborazione
 csvfilesreg(end)=[];
 csvfilesreg(end)=[];
 k=0;
@@ -86,6 +90,7 @@ for l = 1:length(nuovi_casi())
         terapia_intensiva_giornaliera(l)=terapia_intensiva(l)-terapia_intensiva(l-1);
         nuovi_guariti(l)=guariti(l)-guariti(l-1);
         nuovi_deceduti(l)=deceduti(l)-deceduti(l-1);
+        %         tamponi_per_giorno(l)=abs(tamponi(l)-tamponi(l-1));
         tamponi_per_giorno(l)=tamponi(l)-tamponi(l-1);
         differenza_infetti(l)=nuovi_casi(l)-nuovi_casi(l-1);
         %         test(l)=((diff_infetti(l))/nuovi_casi(l-1))*100;
@@ -178,26 +183,61 @@ for ll = 1:length(Wnuovi_casi())
     Wrapporto_infetti_su_tamponi(ll)=(Wnuovi_casi(ll)*100)/Wtamponi_per_settimana(ll);
 end
 
-%%plotting%%
+
+
+%calcolo media mobile 7 giorni
+% i=1;
+% var_index=1;
+% uscita=false(1);
+% while ~uscita
+%     last_i=i;
+%     
+%     while (i-last_i ) < 7
+%         MOBnuovi_attuali(var_index)=MOBnuovi_attuali(var_index)+nuovi_attuali_positivi(i);
+%         MOBdiff_terapia_intensiva(var_index)=MOBdiff_terapia_intensiva(var_index)+
+%         MOBdiff_ospedalizzati(var_index)=MOBdiff_ospedalizzati(var_index)+
+%         MOBdiff_isolamento_domiciliare(var_index)=MOBdiff_isolamento_domiciliare(var_index)+
+%         MOBnuovi_casi(var_index)=MOBnuovi_casi(var_index)+
+%         MOBnuovi_guariti(var_index)=MOBnuovi_guariti(var_index)+
+%         MOBnuovi_deceduti(var_index)=MOBnuovi_deceduti(var_index)+
+%         MOBtamponi_per_periodo(var_index)=MOBtamponi_per_periodo(var_index)+
+%         MOBdiff_infetti(var_index)=MOBdiff_infetti(var_index)+
+%         MOBguariti_su_morti_per_periodo(var_index)=MOBguariti_su_morti_per_periodo(var_index)+
+%         MOBrapporto_infetti_su_tamponi(var_index)=MOBrapporto_infetti_su_tamponi(var_index)+
+%         i=i+1;
+%     end
+% 
+%     
+%     i=last_i+1;
+%     test_i=i+7;
+%     var_index=var_index+1; %indice per i vettori
+%     if test_i >= length(length(csvfilesreg))
+%         uscita=true(1);
+%     end
+% end
+
+
+
+%% plotting %%
 
 figure('Name','Nuovi casi')
 subplot(2,2,1)
-plot(assex,nuovi_attuali_positivi,'r-+'), grid on
+plot(assex,nuovi_attuali_positivi,'r'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Nuovi attualmente infetti')
 subplot(2,2,2)
-plot(assex,totale_casi,'k-+',assex,attuali_positivi,'b-+',assex,guariti,'r-+'), grid on
+plot(assex,totale_casi,'k',assex,attuali_positivi,'b',assex,guariti,'r'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Totali','Attualmente attivi','Guariti')
 subplot(2,2,3)
-plot(assex,differenza_infetti,'b-+'), grid on
+plot(assex,differenza_infetti,'b'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Differenza infetti')
 subplot(2,2,4)
-plot(assex,nuovi_casi,'b-+'), grid on
+plot(assex,nuovi_casi,'b'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Nuovi infetti')
@@ -205,22 +245,22 @@ legend('Nuovi infetti')
 
 figure('Name','Deceduti, guariti e ospedalizzazione')
 subplot(2,2,1)
-plot(assex,guariti,'r-+',assex,deceduti,'b-+'), grid on
+plot(assex,guariti,'r',assex,deceduti,'b'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Attualmente Guariti','Totale Deceduti')
 subplot(2,2,2)
-plot(assex,nuovi_guariti,'r-+',assex,nuovi_deceduti,'b-+'), grid on
+plot(assex,nuovi_guariti,'r',assex,nuovi_deceduti,'b'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Nuovi guariti','Nuovi Deceduti')
 subplot(2,2,3)
-plot(assex,ricoverati_sintomatici,'r-+',assex,isolamento_domiciliare,'g-+',assex,totale_ospedalizzati,'k-+'), grid on
+plot(assex,ricoverati_sintomatici,'r',assex,isolamento_domiciliare,'g',assex,totale_ospedalizzati,'k'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Ricoverati sintomatici','Isolamento domiciliare','Totale ospedalizzati')
 subplot(2,2,4)
-plot(assex,terapia_intensiva,'r-+',assex,terapia_intensiva_giornaliera,'b-+'), grid on
+plot(assex,terapia_intensiva,'r',assex,terapia_intensiva_giornaliera,'b'), grid on
 ylabel('Numero casi')
 xlabel('Giorni da inizio [au]')
 legend('Dati complessivi terapia intensiva','Dati giornalieri terapia intensiva')
@@ -228,17 +268,17 @@ legend('Dati complessivi terapia intensiva','Dati giornalieri terapia intensiva'
 
 figure('Name','Tamponi')
 subplot(3,1,1)
-plot(assex,tamponi,'r-+'), grid on
+plot(assex,tamponi,'r'), grid on
 ylabel('Numero tamponi')
 xlabel('Giorni da inizio [au]')
 legend('Numero tamponi effettuati')
 subplot(3,1,2)
-plot(assex,tamponi_per_giorno,'r-+'), grid on
+plot(assex,tamponi_per_giorno,'r'), grid on
 ylabel('Numero tamponi')
 xlabel('Giorni da inizio [au]')
 legend('Numero tamponi per giorno')
 subplot(3,1,3)
-plot(assex,rapporto_infetti_su_tamponi,'r-+'), grid on
+plot(assex,rapporto_infetti_su_tamponi,'r'), grid on
 ylabel('Valori in %')
 xlabel('Giorni da inizio [au]')
 legend('Rapporto infetti per giorno/tamponi')
@@ -248,44 +288,30 @@ legend('Rapporto infetti per giorno/tamponi')
 %%WEEK PLOTTING
 
 figure('Name','Nuovi casi ')
-subplot(2,2,1)
+subplot(3,1,1)
 plot(Wassex,Wnuovi_attuali,'r-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
 legend('Nuovi attualmente infetti')
-subplot(2,2,2)
-plot(Wassex,Wtotale_casi,'k-+',Wassex,Wattuali_positivi,'b-+',Wassex,Wguariti,'r-+'), grid on
-ylabel('Numero casi per settimana')
-xlabel('N° settimane passate [au]')
-legend('Totali','Attualmente attivi','Guariti')
-subplot(2,2,3)
-plot(Wassex,Wdiff_infetti,'b-+'), grid on
-ylabel('Numero casi per settimana')
-xlabel('N° settimane passate [au]')
-legend('Differenza infetti settimanali')
-subplot(2,2,4)
+subplot(3,1,2)
 plot(Wassex,Wnuovi_casi,'b-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
 legend('Nuovi infetti per settimana')
-
-figure('Name','Deceduti, guariti e ospedalizzazione')
-subplot(2,2,1)
-plot(Wassex,Wguariti,'r-+',Wassex,Wdeceduti,'b-+'), grid on
+subplot(3,1,3)
+plot(Wassex,Wdiff_infetti,'b-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
-legend('Attualmente Guariti','Totale Deceduti')
-subplot(2,2,2)
+legend('Differenza infetti settimanali')
+
+
+figure('Name','Deceduti, guariti e ospedalizzazione')
+subplot(2,1,1)
 plot(Wassex,Wnuovi_guariti,'r-+',Wassex,Wnuovi_deceduti,'b-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
 legend('Nuovi guariti','Nuovi Deceduti')
-subplot(2,2,3)
-plot(Wassex,Wcasi_sintomatici,'r-+',Wassex,Wisolamento_domiciliare,'g-+',Wassex,Wtotale_ospedalizzati,'k-+'), grid on
-ylabel('Numero casi per settimana')
-xlabel('N° settimane passate [au]')
-legend('Ricoverati sintomatici','Isolamento domiciliare','Totale ospedalizzati')
-subplot(2,2,4)
+subplot(2,1,2)
 plot(Wassex,Wterapia_intensiva,'b-+'), grid on
 ylabel('Numero casi per settimana')
 xlabel('N° settimane passate [au]')
@@ -294,17 +320,12 @@ legend('Variazione settimanale terapia intensiva')
 
 
 figure('Name','Tamponi')
-subplot(3,1,1)
-plot(Wassex,Wtamponi,'r-+'), grid on
-ylabel('Tamponi effettuati')
-xlabel('N° settimane passate [au]')
-legend('Numero tamponi effettuati')
-subplot(3,1,2)
+subplot(2,1,1)
 plot(Wassex,Wtamponi_per_settimana,'r-+'), grid on
 ylabel('Tamponi effettuati')
 xlabel('N° settimane passate [au]')
 legend('Numero tamponi effettuati nella settimana')
-subplot(3,1,3)
+subplot(2,1,2)
 plot(Wassex,Wrapporto_infetti_su_tamponi,'r-+'), grid on
 ylabel('Valori in %')
 xlabel('N° settimane passate [au]')
