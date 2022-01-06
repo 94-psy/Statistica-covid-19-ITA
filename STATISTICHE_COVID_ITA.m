@@ -1,5 +1,8 @@
 clear all; close all; clc
 
+% da aggiungere: linea verticale ad ogni anno ed eventualmente una che si
+% sposta in base al giorno e mostra anche una linea nell'anno precedete
+
 %% DATA
 currentFolder = pwd;
 newFolder='COVID-19';
@@ -92,6 +95,9 @@ for l = 1:length(nuovi_casi())
         nuovi_deceduti(l)=deceduti(l)-deceduti(l-1);
         %         tamponi_per_giorno(l)=abs(tamponi(l)-tamponi(l-1));
         tamponi_per_giorno(l)=tamponi(l)-tamponi(l-1);
+        if tamponi_per_giorno(l) < 0
+            tamponi_per_giorno(l)=tamponi_per_giorno(l-1);
+        end
         differenza_infetti(l)=nuovi_casi(l)-nuovi_casi(l-1);
         %         test(l)=((diff_infetti(l))/nuovi_casi(l-1))*100;
     end
@@ -99,7 +105,8 @@ for l = 1:length(nuovi_casi())
 end
 
 %%RIASSUNTO SETTIMANALE
-%%24/02/2020 primo report, lunedì
+%%24/02/2020 primo report, lunedì, 54-esimo giorno dell'anno, quindi
+%%mancano 53 giorni
 
 numero_di_settimane=fix(k/7);
 giorni_rimanenti=(k/7-numero_di_settimane)*7;
@@ -183,6 +190,85 @@ for ll = 1:length(Wnuovi_casi())
     Wrapporto_infetti_su_tamponi(ll)=(Wnuovi_casi(ll)*100)/Wtamponi_per_settimana(ll);
 end
 
+%% calcolo per anno %%
+
+tot_anni=ceil((length(totale_casi)+53)/365.25);
+
+anno_deceduti=nan(tot_anni,366);
+anno_terapia_intensiva=nan(tot_anni,366);
+anno_terapia_intensiva_giornaliera=nan(tot_anni,366);
+anno_ricoverati_sintomatici=nan(tot_anni,366);
+anno_isolamento_domiciliare=nan(tot_anni,366);
+anno_totale_ospedalizzati=nan(tot_anni,366);
+anno_guariti=nan(tot_anni,366);
+anno_nuovi_attuali_positivi=nan(tot_anni,366);
+anno_attuali_positivi=nan(tot_anni,366);
+anno_totale_casi=nan(tot_anni,366);
+anno_nuovi_casi=nan(tot_anni,366);
+anno_nuovi_guariti=nan(tot_anni,366);
+anno_nuovi_deceduti=nan(tot_anni,366);
+anno_tamponi=nan(tot_anni,366);
+anno_rapporto_infetti_su_tamponi=nan(tot_anni,366);
+anno_tamponi_per_giorno=nan(tot_anni,366);
+anno_differenza_infetti=nan(tot_anni,366);
+
+k=1;
+fine_ciclo=0;
+
+for i = 1:tot_anni
+    if mod(i-1,4) == 0
+        lim_anno=366;
+    else
+        lim_anno=365;
+    end
+    for ii=1:lim_anno
+        if i == 1 && ii < 54
+            anno_deceduti(i,ii)=nan;
+            anno_terapia_intensiva(i,ii)=nan;
+            anno_terapia_intensiva_giornaliera(i,ii)=nan;
+            anno_ricoverati_sintomatici(i,ii)=nan;
+            anno_isolamento_domiciliare(i,ii)=nan;
+            anno_totale_ospedalizzati(i,ii)=nan;
+            anno_guariti(i,ii)=nan;
+            anno_nuovi_attuali_positivi(i,ii)=nan;
+            anno_attuali_positivi(i,ii)=nan;
+            anno_totale_casi(i,ii)=nan;
+            anno_nuovi_casi(i,ii)=nan;
+            anno_nuovi_guariti(i,ii)=nan;
+            anno_nuovi_deceduti(i,ii)=nan;
+            anno_tamponi(i,ii)=nan;
+            anno_rapporto_infetti_su_tamponi(i,ii)=nan;
+            anno_tamponi_per_giorno(i,ii)=nan;
+            anno_differenza_infetti(i,ii)=nan;
+        else
+            anno_deceduti(i,ii)=deceduti(k);
+            anno_terapia_intensiva(i,ii)=terapia_intensiva(k);
+            anno_terapia_intensiva_giornaliera(i,ii)=terapia_intensiva_giornaliera(k);
+            anno_ricoverati_sintomatici(i,ii)=ricoverati_sintomatici(k);
+            anno_isolamento_domiciliare(i,ii)=isolamento_domiciliare(k);
+            anno_totale_ospedalizzati(i,ii)=totale_ospedalizzati(k);
+            anno_guariti(i,ii)=guariti(k);
+            anno_nuovi_attuali_positivi(i,ii)=nuovi_attuali_positivi(k);
+            anno_attuali_positivi(i,ii)=attuali_positivi(k);
+            anno_totale_casi(i,ii)=totale_casi(k);
+            anno_nuovi_casi(i,ii)=nuovi_casi(k);
+            anno_nuovi_guariti(i,ii)=nuovi_guariti(k);
+            anno_nuovi_deceduti(i,ii)=nuovi_deceduti(k);
+            anno_tamponi(i,ii)=tamponi(k);
+            anno_rapporto_infetti_su_tamponi(i,ii)=rapporto_infetti_su_tamponi(k);
+            anno_tamponi_per_giorno(i,ii)=tamponi_per_giorno(k);
+            anno_differenza_infetti(i,ii)=differenza_infetti(k);
+            k=k+1;
+        end
+        if k > length(differenza_infetti)
+            
+            return
+            
+        end
+        
+    end
+end
+
 
 
 %calcolo media mobile 7 giorni
@@ -191,7 +277,7 @@ end
 % uscita=false(1);
 % while ~uscita
 %     last_i=i;
-%     
+%
 %     while (i-last_i ) < 7
 %         MOBnuovi_attuali(var_index)=MOBnuovi_attuali(var_index)+nuovi_attuali_positivi(i);
 %         MOBdiff_terapia_intensiva(var_index)=MOBdiff_terapia_intensiva(var_index)+
@@ -206,8 +292,8 @@ end
 %         MOBrapporto_infetti_su_tamponi(var_index)=MOBrapporto_infetti_su_tamponi(var_index)+
 %         i=i+1;
 %     end
-% 
-%     
+%
+%
 %     i=last_i+1;
 %     test_i=i+7;
 %     var_index=var_index+1; %indice per i vettori
@@ -216,7 +302,12 @@ end
 %     end
 % end
 
+%% test audio
 
+% data_audio=1.5*differenza_infetti/max(differenza_infetti);
+% resample_prova=resample(data_audio,fix(44100/400),1);
+% FS=44100;
+% audiowrite('test.wav',resample_prova,FS);
 
 %% plotting %%
 
@@ -332,6 +423,118 @@ xlabel('N° settimane passate [au]')
 legend('Rapporto infetti per settimana/tamponi')
 % subplot(2,2,4)
 
+
+%ANNUAL PLOTTING
+
+
+figure('Name','Attualmente Positivi')
+for i=1:tot_anni
+    subplot(2,1,1)
+    hold on;
+    anno_in_corso=2020+i-1;
+    txt = ['Nuovi attualmente positivi (al netto di guarigioni e decessi), anno ',num2str(anno_in_corso)];
+    plot(anno_nuovi_attuali_positivi(i,:),'DisplayName',txt), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+    
+    subplot(2,1,2)
+    hold on;
+    txt1 = ['Attualmente positivi, anno ',num2str(anno_in_corso)];
+    plot(anno_attuali_positivi(i,:),'DisplayName',txt1), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+end
+
+figure('Name','Nuovi Casi')
+for i=1:tot_anni
+    subplot(2,1,1)
+    hold on;
+    anno_in_corso=2020+i-1;
+    txt = ['Nuovi casi positivi registrati, anno ',num2str(anno_in_corso)];
+    plot(anno_nuovi_casi(i,:),'DisplayName',txt), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+    
+    subplot(2,1,2)
+    hold on;
+    txt1 = ['Differenza nuovi infetti giornaliera, anno ',num2str(anno_in_corso)];
+    plot(anno_differenza_infetti(i,:),'DisplayName',txt1), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+end
+
+
+figure('Name','Tamponi')
+for i=1:tot_anni
+    subplot(2,1,1)
+    hold on;
+    anno_in_corso=2020+i-1;
+    txt = ['Tamponi giornalieri, anno ',num2str(anno_in_corso)];
+    plot(anno_tamponi_per_giorno(i,:),'DisplayName',txt), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+    
+    subplot(2,1,2)
+    hold on;
+    txt1 = ['Rapporto infetti su tamponi, anno ',num2str(anno_in_corso)];
+    plot(anno_rapporto_infetti_su_tamponi(i,:),'DisplayName',txt1), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+end
+
+figure('Name','Decessi e Guarigioni')
+for i=1:tot_anni
+    subplot(2,1,1)
+    hold on;
+    anno_in_corso=2020+i-1;
+    txt = ['Decessi, anno ',num2str(anno_in_corso)];
+    plot(anno_nuovi_deceduti(i,:),'DisplayName',txt), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+    
+    subplot(2,1,2)
+    hold on;
+    txt1 = ['Guarigioni, anno ',num2str(anno_in_corso)];
+    plot(anno_nuovi_guariti(i,:),'DisplayName',txt1), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+end
+
+figure('Name','Terapia intensiva')
+for i=1:tot_anni
+    subplot(2,1,1)
+    hold on;
+    anno_in_corso=2020+i-1;
+    txt = ['Variazione giornaliera terapia intensiva, anno ',num2str(anno_in_corso)];
+    plot(anno_terapia_intensiva_giornaliera(i,:),'DisplayName',txt), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+    
+    subplot(2,1,2)
+    hold on;
+    txt1 = ['Totale occupazione terapia intensiva, anno ',num2str(anno_in_corso)];
+    plot(anno_terapia_intensiva(i,:),'DisplayName',txt1), grid on
+    ylabel('Numero casi')
+    xlabel('Giorni')
+    legend show
+end
+
+% anno_deceduti=nan(tot_anni,366);
+% anno_ricoverati_sintomatici=nan(tot_anni,366);
+% anno_isolamento_domiciliare=nan(tot_anni,366);
+% anno_totale_ospedalizzati=nan(tot_anni,366);
+% anno_guariti=nan(tot_anni,366);
+% anno_totale_casi=nan(tot_anni,366);
+% anno_tamponi=nan(tot_anni,366);
 
 % figure('Name','Test')
 % plot(assex,test), grid on
