@@ -262,9 +262,7 @@ for i = 1:tot_anni
             k=k+1;
         end
         if k > length(differenza_infetti)
-            
-            return
-            
+            break
         end
         
     end
