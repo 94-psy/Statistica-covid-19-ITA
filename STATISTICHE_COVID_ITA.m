@@ -68,7 +68,7 @@ for file = csvfilesreg'
         terapia_intensiva(k)=terapia_intensiva(k)+data(i,8);
         guariti(k)=guariti(k)+data(i,14);
         attuali_positivi(k)=attuali_positivi(k)+data(i,11);
-        nuovi_attuali_positivi(k)=nuovi_attuali_positivi(k)+data(i,12);
+        nuovi_attuali_positivi(k)=nuovi_attuali_positivi(k)+data(i,13);
         totale_casi(k)=totale_casi(k)+data(i,18);
         tamponi(k)=tamponi(k)+data(i,19);
         ricoverati_sintomatici(k)=ricoverati_sintomatici(k)+data(i,7);
@@ -106,8 +106,8 @@ for l = 1:length(nuovi_casi())
 end
 
 %%RIASSUNTO SETTIMANALE
-%%24/02/2020 primo report, lunedì, 54-esimo giorno dell'anno, quindi
-%%mancano 53 giorni
+%%24/02/2020 primo report, lunedì, 55-esimo giorno dell'anno, quindi
+%%mancano 54 giorni
 
 numero_di_settimane=fix(k/7);
 giorni_rimanenti=(k/7-numero_di_settimane)*7;
@@ -193,7 +193,7 @@ end
 
 %% calcolo per anno %%
 
-tot_anni=ceil((length(totale_casi)+53)/365.25);
+tot_anni=ceil((length(totale_casi)+54)/365.25);
 
 anno_deceduti=nan(tot_anni,366);
 anno_terapia_intensiva=nan(tot_anni,366);
@@ -223,7 +223,7 @@ for i = 1:tot_anni
         lim_anno=365;
     end
     for ii=1:lim_anno
-        if i == 1 && ii < 54
+        if i == 1 && ii < 55
             anno_deceduti(i,ii)=nan;
             anno_terapia_intensiva(i,ii)=nan;
             anno_terapia_intensiva_giornaliera(i,ii)=nan;
