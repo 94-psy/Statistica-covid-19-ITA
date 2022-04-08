@@ -8,10 +8,10 @@ clear all; close all; clc
 currentFolder = pwd;
 newFolder='COVID-19';
 if ~exist(newFolder, 'dir')
-    !git clone git://github.com/pcm-dpc/COVID-19.git
+    !git clone https://github.com/pcm-dpc/COVID-19.git
 else
     oldFolder = cd(newFolder);
-    !git pull git://github.com/pcm-dpc/COVID-19.git
+    !git pull https://github.com/pcm-dpc/COVID-19.git
     cd(oldFolder);
 end
 if ismac
